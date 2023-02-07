@@ -1,4 +1,6 @@
 const config = require('config');
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
 const express = require('express');
 const Joi = require('joi');
 const logger = require('./logger');
@@ -19,8 +21,11 @@ console.log("Mail Password: "+ config.get('mail.password'))
 
 if(app.get('env') === "development"){
     app.use(morgan('tiny')); //logs the req on the console
-    console.log("mogan enabled...")
+    startupDebugger("mogan enabled...")
 }
+
+//Db work ...
+dbDebugger('Connected to the database...');
 
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
 console.log(`app: ${app.get('env')}`) //development testing or production environment
