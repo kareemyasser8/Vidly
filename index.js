@@ -1,5 +1,5 @@
 const config = require('config');
-const startupDebugger = require('debug')('app:startup');
+const startupDebugger = require('debug')('app:startup'); //debug app namespace
 const dbDebugger = require('debug')('app:db');
 const express = require('express');
 const Joi = require('joi');
@@ -10,6 +10,8 @@ const app = new express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'))
+
+app.set('view engine','pug'); //express will internally load this module
 
 app.use(logger);
 app.use(helmet());
@@ -42,7 +44,8 @@ const genres = [
 //-------------------GET REQUESTS----------------------------------------
 
 app.get('/', (req, res) => {
-    res.send("Welcome to the Vidly app");
+    // res.send("Welcome to the Vidly app");
+    res.render('index',{title: "Vidly app", message:"hello"})
 })
 
 app.get('/api/genres', (req, res) => {
