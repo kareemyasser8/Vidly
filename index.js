@@ -1,12 +1,24 @@
 const express = require('express');
 const Joi = require('joi');
 const logger = require('./logger');
+const helmet = require('helmet')
+const morgan = require('morgan');
 const app = new express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'))
 
 app.use(logger);
+app.use(helmet());
+
+
+if(app.get('env') === "development"){
+    app.use(morgan('tiny')); //logs the req on the console
+    console.log("mogan enabled...")
+}
+
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`app: ${app.get('env')}`) //development testing or production environment
 
 
 const genres = [
