@@ -38,6 +38,9 @@ async function createCourse() {
 }
 
 async function getCourses(){
+
+    //---Comparison Operators
+
     // eq (equal)
     // ne (not equal)
     // gt (greater than)
@@ -47,8 +50,12 @@ async function getCourses(){
     // in
     // nin (not in)
 
+
+
     const courses = await Course
-    .find({author: 'Kareem', isPublished: true })
+    // .find({author: 'Kareem', isPublished: true })
+    // .find({price: {$gte: 10, $lte: 20}})
+    .find({price: {$in: [10,15,20]}})
     .limit(10)
     .sort({name: 1}) // 1 means ascending order, -1 means descending order
     .select({name: 1,tags: 1})
