@@ -24,7 +24,15 @@ const courseSchema = new mongoose.Schema({
         enum: ['web','mobile','network']
     },
     author: String,
-    tags: [String],
+    tags: {
+        type: Array,
+        validate: {
+            validator: function(v){
+                return v && v.length > 0;
+            },
+            message: 'A course should have at least one tag'
+        }
+    },
     date: { type: Date, default: Date.now },
     isPublished: Boolean,
     price: {
@@ -42,10 +50,10 @@ async function createCourse() {
     const course = new Course({
         name: 'Redux Course',
         author: 'Kareem',
-        category: 'java',
-        tags: ['react', 'front-end'],
+        category: 'web',
+        tags: null,
         isPublished: true,
-        price: 9
+        price: 10
     })
 
     //once we have a schema, we need to compile that in a model in order to have a class.
