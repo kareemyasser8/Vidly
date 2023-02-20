@@ -12,12 +12,27 @@ mongoose.connect('mongodb://127.0.0.1/mongo-exercises').then(
 
 const courseSchema = new mongoose.Schema({
     _id: String,
-    name: { type: String, required: true },
+    name: {
+         type: String,
+          required: true,
+          minlength: 5,
+          maxlength: 255
+         },
+    category: {
+        type: String,
+        required: true,
+        enum: ['web','mobile','network']
+    },
     author: String,
     tags: [String],
     date: { type: Date, default: Date.now },
-    price: Number,
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {
+        min: 10,
+        max: 200,
+        type: Number,
+        required: function(){ return this.isPublished; } //can't work with arrow function
+    }
 })
 
 const Course = mongoose.model('Course', courseSchema); //we get a Course class in our application
@@ -25,10 +40,12 @@ const Course = mongoose.model('Course', courseSchema); //we get a Course class i
 async function createCourse() {
 
     const course = new Course({
-        // name: 'Redux Course',
+        name: 'Redux Course',
         author: 'Kareem',
+        category: 'java',
         tags: ['react', 'front-end'],
-        isPublished: true
+        isPublished: true,
+        price: 9
     })
 
     //once we have a schema, we need to compile that in a model in order to have a class.
