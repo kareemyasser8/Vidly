@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 
 mongoose.set("strictQuery", false)
@@ -11,7 +12,7 @@ mongoose.connect('mongodb://127.0.0.1/mongo-exercises').then(
 
 const courseSchema = new mongoose.Schema({
     _id: String,
-    name: String,
+    name: { type: String, required: true },
     author: String,
     tags: [String],
     date: { type: Date, default: Date.now },
@@ -24,7 +25,7 @@ const Course = mongoose.model('Course', courseSchema); //we get a Course class i
 async function createCourse() {
 
     const course = new Course({
-        name: 'Redux Course',
+        // name: 'Redux Course',
         author: 'Kareem',
         tags: ['react', 'front-end'],
         isPublished: true
@@ -33,9 +34,14 @@ async function createCourse() {
     //once we have a schema, we need to compile that in a model in order to have a class.
     //then we create an object based on that class, and this object maps to a document in a mongo DB database
 
+    try{
+        const result = await course.save();
+        console.log(result)
+    }
+    catch(ex){
+        console.log(ex.message);
+    }
 
-    const result = await course.save();
-    console.log(result)
 
 }
 
@@ -108,10 +114,10 @@ async function removeCourse(id){
     }
 }
 
-removeCourse('5a68fdf95db93f6477053ddd')
+// removeCourse('5a68fdf95db93f6477053ddd')
 
 // updateCourse('5a68fdf95db93f6477053ddd');
 
-// createCourse();
+createCourse();
 
 // getCourses();
