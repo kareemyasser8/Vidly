@@ -11,23 +11,26 @@ mongoose.connect('mongodb://127.0.0.1/mongo-exercises').then(
 
 
 const courseSchema = new mongoose.Schema({
-    _id: String,
+    // _id: String,
     name: {
-         type: String,
-          required: true,
-          minlength: 5,
-          maxlength: 255
-         },
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 255,
+
+    },
     category: {
         type: String,
         required: true,
-        enum: ['web','mobile','network']
+        lowercase: true,
+        enum: ['web', 'mobile', 'network']
     },
     author: String,
     tags: {
         type: Array,
         validate: {
-            validator: function(v){
+
+            validator: function (v) {
                 return v && v.length > 0;
             },
             message: 'A course should have at least one tag'
@@ -38,8 +41,10 @@ const courseSchema = new mongoose.Schema({
     price: {
         min: 10,
         max: 200,
+        get: v=> Math.round(v),
+        set: v=>Math.round(v),
         type: Number,
-        required: function(){ return this.isPublished; } //can't work with arrow function
+        required: function () { return this.isPublished; } //can't work with arrow function
     }
 })
 
@@ -50,21 +55,24 @@ async function createCourse() {
     const course = new Course({
         name: 'Redux Course',
         author: 'Kareem',
-        category: 'web',
-        tags: null,
+        category: 'WEB',
+        tags: ['backend'],
         isPublished: true,
-        price: 10
+        price: 15.8
     })
 
     //once we have a schema, we need to compile that in a model in order to have a class.
     //then we create an object based on that class, and this object maps to a document in a mongo DB database
 
-    try{
+    try {
         const result = await course.save();
         console.log(result)
     }
-    catch(ex){
-        console.log(ex.message);
+    catch (ex) {
+        for(field in ex.errors)
+            console.log(ex.errors[field].message);
+
+        console.log(ex.message)    
     }
 
 
@@ -89,7 +97,8 @@ async function getCourses() {
 
     const courses = await Course
         .find({
-            _id: "5a68fdf95db93f6477053ddd" })
+            _id: "5a68fdf95db93f6477053ddd"
+        })
         // .find({price: {$gte: 10, $lte: 20}})
         // .find({price: {$in: [10,15,20]}})
         //.or([{author: 'Mosh'},{isPublished: true}]) //you will get courses which are author by mosh or the published courses
@@ -99,18 +108,18 @@ async function getCourses() {
         // .find({ author: /.*Kareem.*/i }) //contains Mosh in anywhere
         .limit(10)
         .sort({ name: 1 }) // 1 means ascending order, -1 means descending order
-        // .select({name: 1,tags: 1})
-        // .count()
+    // .select({name: 1,tags: 1})
+    // .count()
     console.log(courses);
 }
 
-async function updateCourse(id){
-    const course = await Course.findByIdAndUpdate(id,{
-        $set:{
+async function updateCourse(id) {
+    const course = await Course.findByIdAndUpdate(id, {
+        $set: {
             author: 'JAckyy',
             isPublished: false
         }
-    }, {new: true})
+    }, { new: true })
     // if(!course){
     //     console.log("Course is not found")
     //     return
@@ -127,12 +136,12 @@ async function updateCourse(id){
 
 }
 
-async function removeCourse(id){
-    const result = await Course.deleteOne({ _id: id})
-    if(!result){
+async function removeCourse(id) {
+    const result = await Course.deleteOne({ _id: id })
+    if (!result) {
         console.log("Couldn't find the desired course that you want to delete..")
         return
-    }else{
+    } else {
         console.log("Course is removed successfully!!");
         console.log(result);
 
