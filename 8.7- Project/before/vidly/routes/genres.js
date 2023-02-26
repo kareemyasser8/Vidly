@@ -27,7 +27,7 @@ async function getGenres() {
 }
 
 // createGenre('Marvel');
-getGenres();
+// getGenres();
 
 
 router.get('/', async (req, res) => {
