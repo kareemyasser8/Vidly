@@ -37,7 +37,7 @@ async function getGenres() {
 
 
 router.get('/', async (req, res, next) => {
-
+  throw new Error('Couldnt get the genres');
   const genres = await Genre.find().sort('name')
   res.send(genres);
 

@@ -1,4 +1,5 @@
 require('express-async-errors')
+const winston = require('winston')
 const config = require('config')
 const Joi = require('joi');
 const genres = require('./routes/genres');
@@ -11,6 +12,26 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 const error = require('./middleware/error')
+
+process.on('uncaughtException',(ex)=>{
+  winston.error(ex.message, ex);
+  process.exit(1);
+})
+
+process.on('unhandledRejection',(ex)=>{
+  winston.error(ex.message, ex);
+  process.exit(1);
+})
+
+winston.h
+
+winston.add(winston.transports.File, {filename: 'logfile.log'})
+
+// throw new Error('Something Failed during Start up')
+const p = Promise.reject(new Error('Something failed misrebly!!'));
+
+p.then(()=>console.log('Done'));
+
 
 if (!config.get('jwtPrivateKey')){
   console.log('FATAL ERROR: jwtPrivateKey is not defined');
