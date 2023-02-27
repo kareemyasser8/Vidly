@@ -3,6 +3,7 @@ const _ = require('lodash')
 const bcrypt = require('bcrypt')
 const { validateUser, User } = require('../models/user')
 const router = express.Router();
+const auth = require('../middleware/auth')
 
 router.post('/', async (req, res) => {
     let { error } = validateUser(req.body);
@@ -40,13 +41,9 @@ router.post('/', async (req, res) => {
 
 })
 
-router.get('/', async (req, res) => {
-    try {
-        let users = await User.find();
-        res.send(users);
-    } catch (err) {
-        console.log(err.message)
-    }
+router.get('/me',auth, async (req, res) => {
+   const user = await User.findById(req.user._id).select('-password')
+   res.send(user);  
 })
 
 module.exports = router;

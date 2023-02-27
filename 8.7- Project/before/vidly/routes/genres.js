@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const {Genre, validateGenre} = require('../models/genre');
+const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 async function createGenre(newGenreName) {
   const genre = new Genre({
@@ -30,12 +32,22 @@ async function getGenres() {
 // getGenres();
 
 
-router.get('/', async (req, res) => {
-  const genres = await Genre.find().sort('name')
-  res.send(genres);
+router.get('/', async (req, res, next) => {
+
+  try{
+    const genres = await Genre.find().sort('name')
+    res.send(genres);
+  }catch(ex){ 
+      next(ex)
+  }
+
+
 });
 
-router.post('/',async (req, res) => {
+router.post('/',auth,async (req, res) => {
+
+
+
   const { error } = validateGenre(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -59,7 +71,7 @@ router.put('/:id', async (req, res) => {
   res.send(genre);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',[auth,admin], async (req, res) => {
 
   const genre = await Genre.findByIdAndRemove(req.params.id)
 

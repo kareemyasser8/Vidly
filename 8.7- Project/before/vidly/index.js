@@ -34,6 +34,10 @@ app.use('/api/customers', customers);
 app.use('/api/users',users);
 app.use('/api/auth',auth);
 
+app.use(function(err,req,res,next){
+  res.status(500).send('Something Failed')
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
