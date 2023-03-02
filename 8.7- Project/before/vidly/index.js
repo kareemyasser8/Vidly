@@ -14,6 +14,9 @@ require('./startup/config');
 
 
 //export vidly_jwtPrivateKey=123 in the terminal
+//NODE_ENV=test node index.js
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => winston.info(`Listening on port ${port}...`));
+const server  = app.listen(port, () => winston.info(`Listening on port ${port}...`));
+
+module.exports = server;

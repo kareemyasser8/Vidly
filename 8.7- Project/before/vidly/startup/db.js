@@ -1,11 +1,13 @@
 const winston = require('winston');
 const mongoose = require('mongoose')
+const config = require('config')
 
 mongoose.set("strictQuery", false)
 
 module.exports = function () {
-    mongoose.connect('mongodb://127.0.0.1/playground').then(
-        () => winston.info("connection to mongoDB established")
+    const db = config.get('db')
+    mongoose.connect(config.get('db')).then(
+        () => winston.info(`connection to ${db}...`)
     )
 
 }

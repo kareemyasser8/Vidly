@@ -6,3 +6,5 @@
 {"level":"info","message":"connection to mongoDB established","timestamp":"2023-02-27T19:59:42.384Z"}
 {"level":"info","message":"Listening on port 3000...","timestamp":"2023-02-27T20:09:15.557Z"}
 {"level":"info","message":"connection to mongoDB established","timestamp":"2023-02-27T20:09:15.583Z"}
+{"level":"info","message":"Listening on port 3000...","timestamp":"2023-03-02T08:48:25.516Z"}
+{"level":"info","message":"connection to mongodb://127.0.0.1/playground_test...","timestamp":"2023-03-02T08:48:25.601Z"}
